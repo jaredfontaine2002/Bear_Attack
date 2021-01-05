@@ -5,18 +5,18 @@ import dash  # (version 1.12.0) pip install dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 
 app = dash.Dash(external_stylesheets=[dbc.themes.CYBORG])
 
 # ------------------------------------------------------------------------------
-# Import and clean data (importing csv into pandas)
+# Import and clean data (importing  csv into pandas)
 df = pd.read_csv("American_Bear.csv")
 
 df2 = df['Location'].str.replace('near', '')
 
-df2 =df2.str.split(',', expand=True)
+df2 =df2.str.split(',',expand=True)
 df2.rename(columns={0:'City',
                   1:'State'},
           inplace=True, errors='raise')
@@ -27,24 +27,30 @@ df_bear = pd.read_csv('Bear_Geo.csv')
 
 # ------------------------------------------------------------------------------
 # App layout
-app.layout = dbc.Container([
+app.layout = html.Div([
+
     html.H1("Bear Attack Dashboard", style={'text-align': 'center'}),
 
-    dcc.Dropdown(id="Slct_bear",
-                 options=[
-                     {"label": "Polar Bear", "value": 'Polar Bear'},
-                     {"label": "Black Bear", "value": 'Black bear'},
-                     {"label": "Brown Bear", "value": 'Brown bear'}],
-                 multi=False,
-                 value='Polar Bear',
-                 style={'width': "40%"},
-                 clearable = False,
-                 ),
+    html.P("The following is a dashboard showcasing bear attacks in the United States.  Bears are extremely dangerous.  They can run up to 35 mph weigh, climb, swim and open car doors.  Large bears can survive multiple rounds from a fire arm.  If a bear wants to kill you, they will and there is almost nothing you can do about it. I created this dashboard to bring awareness to the problem.The map displays all human deaths from bears in the past one years. Use the dropdown menu to select the type of bear. "),
+    html.Br(),
 
+    dcc.Dropdown(id="Slct_bear",
+                     options=[
+                         {"label": "Polar Bear", "value": 'Polar Bear'},
+                         {"label": "Black Bear", "value": 'Black bear'},
+                         {"label": "Brown Bear", "value": 'Brown bear'}],
+                     multi=False,
+                     value='Polar Bear',
+                     style={'width': "40%"},
+                     clearable=False,
+                     ),
+
+    html.Br(),
     html.Div(id='output_container', children=[]),
     html.Br(),
 
-    dcc.Graph(id='bear_graph', figure={})
+    dcc.Graph(id='bear_graph', figure={}),
+    html.Br()
 
 ])
 
